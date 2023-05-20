@@ -45,7 +45,7 @@ async function run() {
 
 
         app.get("/category/:text", async (req, res) => {
-            console.log(req.params.text);
+            // console.log(req.params.text);
             const text = req.params.text;
             const query = { category: text };
             const result = await alltoysCollection.find(query).toArray();
@@ -64,15 +64,32 @@ async function run() {
 
         app.post('/alltoys', async (req, res) => {
             const addToy = req.body;
-            console.log(addToy);
+            // console.log(addToy);
             const result = await alltoysCollection.insertOne(addToy);
             res.send(result);
         })
 
-
-        app.delete('/alltoys/:id', async(req, res) => {
+        app.put('/alltoys/:id', async (req, res) => {
             const id = req.params.id;
-            console.log(id);
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+            const updateProduct = req.body;
+            // console.log(updateProduct);
+            const product = {
+                $set: {
+                    price: updateProduct.price,
+                    quantity: updateProduct.quantity,
+                    description: updateProduct.description
+                }
+            }
+            const result = await alltoysCollection.updateOne(filter, product, options);
+            res.send(result)
+        })
+
+
+        app.delete('/alltoys/:id', async (req, res) => {
+            const id = req.params.id;
+            // console.log(id);
             const query = { _id: new ObjectId(id) };
             const result = await alltoysCollection.deleteOne(query);
             res.send(result);
