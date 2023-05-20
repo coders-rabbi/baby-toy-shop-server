@@ -46,14 +46,20 @@ async function run() {
 
         app.get("/category/:text", async (req, res) => {
             console.log(req.params.text);
-            const  text = req.params.text;
-            const query = {category: text};
+            const text = req.params.text;
+            const query = { category: text };
             const result = await alltoysCollection.find(query).toArray();
             res.send(result);
         });
 
 
-       
+        app.get("/mytoys/:email", async (req, res) => {
+            console.log(req.params.email);
+            const email = req.params.email;
+            const query = { selleremail: email };
+            const result = await alltoysCollection.find(query).toArray();
+            res.send(result);
+        });
 
 
         // Send a ping to confirm a successful connection
